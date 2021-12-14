@@ -28,7 +28,7 @@ module.exports = {
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
-  productionSourceMap: false,
+  productionSourceMap: false,//是否查看源码
   devServer: {
     port: port,
     open: true,
@@ -42,6 +42,7 @@ module.exports = {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
     name: name,
+    //devtool: 'source-map',//加上这句话才能看到查看源码productionSourceMap才能生效
     resolve: {
       alias: {
         '@': resolve('src')
