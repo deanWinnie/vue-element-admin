@@ -96,30 +96,29 @@ export const asyncRoutes = [
   // chartsRouter,
   // nestedRouter,
   // tableRouter,
-  // {
-  //   path: '/error',
-  //   component: Layout,
-  //   redirect: 'noRedirect',
-  //   name: 'ErrorPages',
-  //   meta: {
-  //     title: 'Error Pages',
-  //     icon: '404'
-  //   },
-  //   children: [
-  //     {
-  //       path: '401',
-  //       component: () => import('@/views/error-page/401'),
-  //       name: 'Page401',
-  //       meta: { title: '401', noCache: true }
-  //     },
-  //     {
-  //       path: '404',
-  //       component: () => import('@/views/error-page/404'),
-  //       name: 'Page404',
-  //       meta: { title: '404', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/book',
+    component: Layout,
+    redirect: '/book/create',
+    meta: {
+      title: '图书管理',
+      icon: 'dashboard'
+    },
+    children: [
+      // {
+      //   path: 'booklist',
+      //   component: () => import('@/views/book/booklist'),
+      //   name: 'booklist',
+      //   meta: { title: '图书列表', noCache: true, roles:['admin','editor'] }
+      // },
+      {
+        path: '/book/create',
+        component: () => import('@/views/book/create'),
+        name: 'book',
+        meta: { title: '添加图书', noCache: true, roles: ['admin'] }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
