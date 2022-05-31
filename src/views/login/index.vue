@@ -40,7 +40,6 @@
             tabindex="2"
             autocomplete="on"
             @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
@@ -108,6 +107,7 @@ export default {
 
   },
   mounted() {
+    // 默认自动对焦
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
     } else if (this.loginForm.password === '') {
@@ -122,6 +122,7 @@ export default {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
+    // 显示密码以后自动对焦
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
