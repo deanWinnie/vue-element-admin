@@ -105,17 +105,24 @@ export const asyncRoutes = [
       icon: 'dashboard'
     },
     children: [
-      // {
-      //   path: 'booklist',
-      //   component: () => import('@/views/book/booklist'),
-      //   name: 'booklist',
-      //   meta: { title: '图书列表', noCache: true, roles:['admin','editor'] }
-      // },
+      {
+        path: '/book/list',
+        component: () => import('@/views/book/create'),
+        name: 'booklist',
+        meta: { title: '图书列表', icon: 'list', noCache: true, roles: ['admin', 'editor'] }
+      },
       {
         path: '/book/create',
         component: () => import('@/views/book/create'),
-        name: 'book',
-        meta: { title: '添加图书', noCache: true, roles: ['admin'] }
+        name: 'bookCreate',
+        meta: { title: '上传图书', icon: 'edit', noCache: true, roles: ['admin'] }
+      },
+      {
+        path: '/book/edit',
+        component: () => import('@/views/book/edit'),
+        hidden: true,
+        name: 'bookEdit',
+        meta: { title: '编辑图书', icon: 'edit', noCache: true, roles: ['admin'], activeMenu: '/book/list' }
       }
     ]
   },
