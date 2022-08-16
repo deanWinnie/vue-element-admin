@@ -1,12 +1,73 @@
 <template>
-  <div />
+  <div class="upload-container">
+    <el-upload
+      :action="action"
+      :headers="headers"
+      :multiple="false"
+      :limit="1"
+      :before-upload="beforeUpload"
+      :on-success="onSuccess"
+      :on-error="onError"
+      :on-remove="onRemove"
+      :file-list="fileList"
+      :on-exceed="onExceed"
+      :disabled="disabled"
+      drag
+      show-file-list
+      accept="application/pdf"
+      class="image-upload"
+    >
+      <i class="el-icon-upload" />
+      <div v-if="fileList.length === 0 " class="el-upload-text">
+        请将电子书拖入或<em>点击上传</em>
+      </div>
+      <div v-else class="el-upload-text">图书已上传</div>
+    </el-upload>
+  </div>
 </template>
 <script>
+import { getToken } from '@/utils/auth'
 export default {
-  data() {
-    return {}
+  props: {
+    fileList: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
-  methods: {}
+  data() {
+    return {
+      action: `${process.env.VUE_APP_BASE_API}/book/upload`
+    }
+  },
+  computed: {
+    headers() {
+      return {
+        Authorization: `Bearer ${getToken()}`
+      }
+    }
+  },
+  methods: {
+    beforeUpload(file) {
+      console.log(file)
+      this.$emit('beforeUpload', file)
+    },
+    onSuccess() {},
+    onError(err) {
+      const errMsg = err.message && JSON.parse(err.message)
+      this.$message.error((errMsg && errMsg.msg && `上传失败，失败原因:${errMsg.msg}`) || '上传失败')
+      this.$emit('onError', err)
+    },
+    onRemove() {},
+    onExceed() {
+      this.$message.warning('每次只能上传一本电子书')
+    }
+  }
 }
 </script>
 <style scoped lang="scss">

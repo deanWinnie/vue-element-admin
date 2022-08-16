@@ -14,7 +14,9 @@
     <div class="detail-container">
       <el-row>
         <Warning />
-        <el-col :span="24" />
+        <el-col :span="24">
+          <ebook-upload />
+        </el-col>
         <el-col :span="24" />
       </el-row>
     </div>
@@ -23,8 +25,9 @@
 <script>
 import Sticky from '@/components/Sticky/index.vue'// 提示组件
 import Warning from './Warning.vue'// 吸顶的组件
+import EbookUpload from '../../../components/EbookUpload'
 export default {
-  components: { Sticky, Warning },
+  components: { Sticky, Warning, EbookUpload },
   props: {
     isEdit: Boolean
   },
