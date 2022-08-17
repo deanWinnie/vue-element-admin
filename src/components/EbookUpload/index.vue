@@ -14,7 +14,7 @@
       :disabled="disabled"
       drag
       show-file-list
-      accept="application/pdf"
+      accept="application/epub+zip"
       class="image-upload"
     >
       <i class="el-icon-upload" />
@@ -57,13 +57,25 @@ export default {
       console.log(file)
       this.$emit('beforeUpload', file)
     },
-    onSuccess() {},
+    onSuccess(response, file) {
+      const { code, msg } = response
+      if (code === 0) {
+        this.$message.success('上传电子书成功')
+        this.$emit('onSuccess', file)
+      } else {
+        this.$message.error((msg && `上传失败，失败原因：${msg}`) || '上传失败')
+        this.$emit('onError', file)
+      }
+    },
     onError(err) {
       const errMsg = err.message && JSON.parse(err.message)
       this.$message.error((errMsg && errMsg.msg && `上传失败，失败原因:${errMsg.msg}`) || '上传失败')
       this.$emit('onError', err)
     },
-    onRemove() {},
+    onRemove() {
+      this.$message.success('电子书删除成功')
+      this.$emit('onRemove')
+    },
     onExceed() {
       this.$message.warning('每次只能上传一本电子书')
     }

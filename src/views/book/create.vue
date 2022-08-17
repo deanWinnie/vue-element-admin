@@ -1,5 +1,5 @@
 <template>
-  <detail is-edit />
+  <detail :is-edit="false" />
 </template>
 <script>
 import Detail from './components/Detail'
