@@ -58,10 +58,10 @@ export default {
       this.$emit('beforeUpload', file)
     },
     onSuccess(response, file) {
-      const { code, msg } = response
+      const { code, msg, data } = response
       if (code === 0) {
         this.$message.success('上传电子书成功')
-        this.$emit('onSuccess', file)
+        this.$emit('onSuccess', data)
       } else {
         this.$message.error((msg && `上传失败，失败原因：${msg}`) || '上传失败')
         this.$emit('onError', file)

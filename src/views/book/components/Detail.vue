@@ -89,7 +89,7 @@
             <el-col :span="12">
               <el-form-item label="封面路径：" :label-width="labelWidth">
                 <el-input
-                  v-model="postForm.filePath"
+                  v-model="postForm.coverPath"
                   placeholder="封面路径"
                   disabled
                 />
@@ -98,7 +98,7 @@
             <el-col :span="12">
               <el-form-item label="文件名称：" :label-width="labelWidth">
                 <el-input
-                  v-model="postForm.unzipPath"
+                  v-model="postForm.originalName"
                   placeholder="文件名称"
                   disabled
                 />
@@ -151,8 +151,42 @@ export default {
   methods: {
     showGuide() {
     },
-    onUploadSuccess() {
-      console.log('onUploadSuccess')
+    setData(data) {
+      const {
+        title,
+        author,
+        publisher,
+        language,
+        cover,
+        rootFile,
+        url,
+        originalName,
+        contents,
+        filename,
+        filePath,
+        coverPath,
+        unzipPath
+      } = data
+      this.postForm = {
+        ...this.postForm,
+        title,
+        author,
+        publisher,
+        language,
+        cover,
+        rootFile,
+        url,
+        originalName,
+        contents,
+        filename,
+        coverPath,
+        unzipPath,
+        filePath
+      }
+    },
+    onUploadSuccess(data) {
+      console.log('onUploadSuccess', data)
+      this.setData(data)
     },
     onUploadRemove() {
       console.log('onUploadRemove')
