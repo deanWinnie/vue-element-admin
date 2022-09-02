@@ -119,7 +119,7 @@
             <el-col :span="24">
               <el-form-item label="目录：" :label-width="labelWidth">
                 <div v-if="postForm.contents && postForm.contents.length>0" class="content-wrapper">
-                  <el-tree />
+                  <el-tree :data="contentsTree" @node-click="onContentClick" />
                 </div>
                 <span v-else>无</span>
               </el-form-item>
@@ -145,11 +145,18 @@ export default {
       loading: false,
       postForm: {},
       fileList: [],
-      labelWidth: '120px'
+      labelWidth: '120px',
+      contentsTree: []
     }
   },
   methods: {
     showGuide() {
+    },
+    onContentClick(data) {
+      console.log(data)
+      if (data.text) {
+        window.open(data.text)
+      }
     },
     setData(data) {
       const {
@@ -165,7 +172,8 @@ export default {
         filename,
         filePath,
         coverPath,
-        unzipPath
+        unzipPath,
+        contentsTree
       } = data
       this.postForm = {
         ...this.postForm,
@@ -181,8 +189,10 @@ export default {
         filename,
         coverPath,
         unzipPath,
-        filePath
+        filePath,
+        contentsTree
       }
+      this.contentsTree = contentsTree
     },
     onUploadSuccess(data) {
       console.log('onUploadSuccess', data)
