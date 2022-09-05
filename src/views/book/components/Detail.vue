@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="postForm" :model="postForm">
+  <el-form ref="postForm" :model="postForm" :rules="rules">
     <Sticky :class-name="'sub-navbar'">
       <el-button v-if="!isEdit" @click="showGuide">显示帮助</el-button>
       <el-button
@@ -23,14 +23,14 @@
           />
         </el-col>
         <el-col :span="24">
-          <el-form-item>
+          <el-form-item prop="title">
             <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
               书名
             </MDinput>
           </el-form-item>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="作者：" :label-width="labelWidth">
+              <el-form-item label="作者：" :label-width="labelWidth" prop="author">
                 <el-input
                   v-model="postForm.author"
                   placeholder="作者"
@@ -38,7 +38,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="出版社：" :label-width="labelWidth">
+              <el-form-item label="出版社：" :label-width="labelWidth" prop="publisher">
                 <el-input
                   v-model="postForm.publisher"
                   placeholder="出版社"
@@ -48,7 +48,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="语言：" :label-width="labelWidth">
+              <el-form-item label="语言：" :label-width="labelWidth" prop="language">
                 <el-input
                   v-model="postForm.language"
                   placeholder="语言"
@@ -135,18 +135,60 @@ import Sticky from '@/components/Sticky/index.vue'// 提示组件
 import Warning from './Warning.vue'// 吸顶的组件
 import EbookUpload from '../../../components/EbookUpload'
 import MDinput from '@/components/MDinput/index.vue'
+import { createBook } from '../../../api/book'
+const defaultForm = {
+  title: '',
+  author: '',
+  publisher: '',
+  language: '',
+  cover: '',
+  rootFile: '',
+  url: '',
+  originalName: '',
+  contents: '',
+  filename: '',
+  filePath: '',
+  coverPath: '',
+  unzipPath: '',
+  contentsTree: ''
+}
+const fields = {
+  title: '标题',
+  author: '作者',
+  publisher: '出版社',
+  language: '语言'
+
+}
 export default {
   components: { Sticky, Warning, EbookUpload, MDinput },
   props: {
     isEdit: Boolean
   },
   data() {
+    const validateRequire = (rule, value, callback) => {
+      if (value.length === 0) {
+        callback(new Error(fields[rule.field] + '必须填写'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: false,
-      postForm: {},
+      postForm: {
+        title: '',
+        author: '',
+        publisher: '',
+        language: ''
+      },
       fileList: [],
       labelWidth: '120px',
-      contentsTree: []
+      contentsTree: [],
+      rules: {
+        title: [{ validator: validateRequire }],
+        author: [{ validator: validateRequire }],
+        publisher: [{ validator: validateRequire }],
+        language: [{ validator: validateRequire }]
+      }
     }
   },
   methods: {
@@ -157,6 +199,11 @@ export default {
       if (data.text) {
         window.open(data.text)
       }
+    },
+    // 重置表单
+    setDefault() {
+      this.postForm = Object.assign({}, defaultForm)
+      this.contentsTree = []
     },
     setData(data) {
       const {
@@ -195,17 +242,33 @@ export default {
       this.contentsTree = contentsTree
     },
     onUploadSuccess(data) {
-      console.log('onUploadSuccess', data)
       this.setData(data)
     },
     onUploadRemove() {
-      console.log('onUploadRemove')
+      this.setDefault()
     },
     submitForm() {
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-      }, 3000)
+      if (!this.loading) {
+        this.loading = true
+        console.log(this.$refs.postForm.validate)
+        this.$refs.postForm.validate((valid, fields) => {
+          console.log(valid, fields)
+          if (valid) {
+            const book = Object.assign({}, this.postForm)
+            delete book.contents
+            delete book.contentsTree
+            if (!this.isEdit) {
+              createBook(book)
+            } else {
+
+            }
+          } else {
+            const message = fields[Object.keys(fields)[0]][0].message
+            this.$message.error(message)
+            this.loading = false
+          }
+        })
+      }
     }
   }
 }
