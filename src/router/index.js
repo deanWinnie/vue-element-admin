@@ -118,7 +118,7 @@ export const asyncRoutes = [
         meta: { title: '上传图书', icon: 'edit', noCache: true, roles: ['admin'] }
       },
       {
-        path: '/book/edit',
+        path: '/book/edit/:filename',
         component: () => import('@/views/book/edit'),
         hidden: true,
         name: 'bookEdit',

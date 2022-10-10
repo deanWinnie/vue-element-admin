@@ -135,7 +135,7 @@ import Sticky from '@/components/Sticky/index.vue'// 提示组件
 import Warning from './Warning.vue'// 吸顶的组件
 import EbookUpload from '../../../components/EbookUpload'
 import MDinput from '@/components/MDinput/index.vue'
-import { createBook } from '../../../api/book'
+import { createBook, getBook } from '../../../api/book'
 const defaultForm = {
   title: '',
   author: '',
@@ -191,8 +191,19 @@ export default {
       }
     }
   },
+  created() {
+    if (this.isEdit) {
+      const filename = this.$route.params.filename
+      this.getBookData(filename)
+    }
+  },
   methods: {
     showGuide() {
+    },
+    getBookData(filename) {
+      getBook({ filename }).then(res => {
+        this.setData(res.data)
+      })
     },
     onContentClick(data) {
       console.log(data)
@@ -204,6 +215,8 @@ export default {
     setDefault() {
       this.postForm = Object.assign({}, defaultForm)
       this.contentsTree = []
+      this.fileList = []
+      this.$refs.postForm.resetFields()
     },
     setData(data) {
       const {
@@ -255,10 +268,15 @@ export default {
           console.log(valid, fields)
           if (valid) {
             const book = Object.assign({}, this.postForm)
-            delete book.contents
             delete book.contentsTree
             if (!this.isEdit) {
-              createBook(book)
+              createBook(book).then(res => {
+                this.$notify.success(res.msg)
+                this.loading = false
+                this.setDefault()
+              }).catch(() => {
+                this.loading = false
+              })
             } else {
 
             }

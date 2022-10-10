@@ -8,3 +8,11 @@ export function createBook(data) {
   })
 }
 
+export function getBook(data) {
+  return request({
+    url: '/book/get',
+    method: 'get',
+    params: data
+  })
+}
+
